@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Locations } from './locations';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
+import { Activity } from '../activity/activity';
 
 export const getNearestLocations = new ValidatedMethod({
   name: 'Locations.getNearestLocations',
@@ -42,5 +43,13 @@ export const changeCheckinStatus = new ValidatedMethod({
         },
       });
     }
+
+    Activity.insert({
+      createdAt: new Date(),
+      username: 'demo',
+      userId: 'demo',
+      type: status,
+      locationId,
+    });
   },
 });

@@ -4,6 +4,8 @@ import { Header } from '../components/Text';
 import { Card } from 'react-native-elements';
 import { Input, PrimaryButton, SecondaryButton } from '../components/Form';
 import Router from '../config/router';
+import config from '../config/config';
+import { Accounts } from 'react-native-meteor';
 
 class SignUp extends Component {
   constructor(props) {
@@ -36,6 +38,31 @@ class SignUp extends Component {
 
   goToSignIn = () => {
     this.props.navigator.push(Router.getRoute('signIn'));
+  };
+
+  signUp = () => {
+    const { email, username, password, confirmPassword } = this.state;
+
+    if (email.length === 0) {
+      return this.props.navigator.showLocalAlert('Email is required.', config.errorStyles);
+    }
+
+    if (username.length === 0) {
+      return this.props.navigator.showLocalAlert('Username is required.', config.errorStyles);
+    }
+
+    if (password.length === 0 || password !== confirmPassword) {
+      return this.props.navigator.showLocalAlert('Passwords must match.', config.errorStyles);
+    }
+
+    this.setState({ loading: true });
+    return Accounts.createUser({ username, email, password }, (err) => {
+      if (err) {
+        this.props.navigator.showLocalAlert(err.reason, config.errorStyles);
+      } else {
+        this.props.navigator.immediatelyResetStack([Router.getRoute('profile')]);
+      }
+    });
   };
 
 
@@ -72,6 +99,8 @@ class SignUp extends Component {
           />
           <PrimaryButton
             title="Sign Up"
+            onPress={this.signUp}
+            loading={this.state.loading}
           />
         </Card>
 

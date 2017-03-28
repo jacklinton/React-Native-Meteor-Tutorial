@@ -11,6 +11,7 @@ import Router from './config/router';
 import colors from './config/colors';
 import Meteor from 'react-native-meteor';
 import config from './config/config';
+import Meteor, { createContainer } from 'react-native-meteor';
 
 Meteor.connect(config.SERVER_URL)
 
@@ -70,4 +71,8 @@ App.propTypes = {
   user: PropTypes.object,
 };
 
-export default App;
+export default createContainer(() => {
+  return {
+    user: Meteor.user(),
+  };
+}, App);

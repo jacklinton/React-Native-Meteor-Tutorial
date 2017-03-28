@@ -51,6 +51,7 @@ export const changeCheckinStatus = new ValidatedMethod({
     }
 
     const existingCheckin = Locations.findOne({ checkedInUserId: this.userId });
+    
     if (status === 'in' && existingCheckin) {
       throw new Meteor.Error('Locations.changeCheckin.checkedInElsewhere',
         'You\'re already checked in at a different location.');
